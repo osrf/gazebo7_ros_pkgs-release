@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2013 Open Source Robotics Foundation
  *
@@ -22,14 +21,16 @@
  */
 
 #include <gazebo/common/Events.hh>
-#include <gazebo/gazebo_ros_api_plugin.h>
+#include "gazebo_ros_api_plugin.h"
 
 namespace gazebo
 {
 
 GazeboRosApiPlugin::GazeboRosApiPlugin() :
   physics_reconfigure_initialized_(false),
-  world_created_(false)
+  world_created_(false),
+  stop_(false),
+  plugin_loaded_(false)
 {
   robot_namespace_.clear();
 }
@@ -37,6 +38,18 @@ GazeboRosApiPlugin::GazeboRosApiPlugin() :
 GazeboRosApiPlugin::~GazeboRosApiPlugin()
 {
   ROS_DEBUG_STREAM_NAMED("api_plugin","GazeboRosApiPlugin Deconstructor start");
+
+  // Unload the sigint event
+  gazebo::event::Events::DisconnectSigInt(sigint_event_);
+  ROS_DEBUG_STREAM_NAMED("api_plugin","After sigint_event unload");
+
+  // Don't attempt to unload this plugin if it was never loaded in the Load() function
+  if(!plugin_loaded_)
+  {
+    ROS_DEBUG_STREAM_NAMED("api_plugin","Deconstructor skipped because never loaded");
+    return;
+  }
+
   // Disconnect slots
   gazebo::event::Events::DisconnectWorldUpdateBegin(wrench_update_event_);
   gazebo::event::Events::DisconnectWorldUpdateBegin(force_update_event_);
@@ -84,13 +97,38 @@ GazeboRosApiPlugin::~GazeboRosApiPlugin()
   ROS_DEBUG_STREAM_NAMED("api_plugin","Unloaded");
 }
 
+void GazeboRosApiPlugin::shutdownSignal()
+{
+  ROS_DEBUG_STREAM_NAMED("api_plugin","shutdownSignal() recieved");
+  stop_ = true;
+}
+
 void GazeboRosApiPlugin::Load(int argc, char** argv)
 {
+  ROS_DEBUG_STREAM_NAMED("api_plugin","Load");
+
+  // connect to sigint event
+  sigint_event_ = gazebo::event::Events::ConnectSigInt(boost::bind(&GazeboRosApiPlugin::shutdownSignal,this));
+
   // setup ros related
   if (!ros::isInitialized())
     ros::init(argc,argv,"gazebo",ros::init_options::NoSigintHandler);
   else
     ROS_ERROR("Something other than this gazebo_ros_api plugin started ros::init(...), command line arguments may not be parsed properly.");
+
+  // check if the ros master is available - required
+  while(!ros::master::check()) 
+  {
+    ROS_WARN_STREAM_NAMED("api_plugin","No ROS master - start roscore to continue...");    
+    // wait 0.5 second
+    usleep(500*1000); // can't use ROS Time here b/c node handle is not yet initialized
+
+    if(stop_)
+    {
+      ROS_WARN_STREAM_NAMED("api_plugin","Canceled loading Gazebo ROS API plugin by sigint event");
+      return;
+    }
+  }
 
   nh_.reset(new ros::NodeHandle("~")); // advertise topics and services in this node's namespace
 
@@ -516,7 +554,7 @@ bool GazeboRosApiPlugin::spawnURDFModel(gazebo_msgs::SpawnModel::Request &req,
     while (pos1 != std::string::npos)
     {
       size_t pos2 = model_xml.find("/", pos1+10);
-      ROS_DEBUG(" pos %d %d",(int)pos1, (int)pos2);
+      //ROS_DEBUG(" pos %d %d",(int)pos1, (int)pos2);
       if (pos2 == std::string::npos || pos1 >= pos2)
       {
         ROS_ERROR("malformed package name?");
@@ -524,7 +562,7 @@ bool GazeboRosApiPlugin::spawnURDFModel(gazebo_msgs::SpawnModel::Request &req,
       }
 
       std::string package_name = model_xml.substr(pos1+10,pos2-pos1-10);
-      ROS_DEBUG("package name [%s]", package_name.c_str());
+      //ROS_DEBUG("package name [%s]", package_name.c_str());
       std::string package_path = ros::package::getPath(package_name);
       if (package_path.empty())
       {
@@ -533,7 +571,7 @@ bool GazeboRosApiPlugin::spawnURDFModel(gazebo_msgs::SpawnModel::Request &req,
         res.status_message = std::string("urdf reference package name does not exist: ")+package_name;
         return false;
       }
-      ROS_DEBUG("package name [%s] has path [%s]", package_name.c_str(), package_path.c_str());
+      ROS_DEBUG_ONCE("Package name [%s] has path [%s]", package_name.c_str(), package_path.c_str());
 
       model_xml.replace(pos1,(pos2-pos1),package_path);
       pos1 = model_xml.find(package_prefix,0);
@@ -608,11 +646,45 @@ bool GazeboRosApiPlugin::spawnSDFModel(gazebo_msgs::SpawnModel::Request &req,
   if (isSDF(model_xml))
   {
     updateSDFAttributes(gazebo_model_xml, model_name, initial_xyz, initial_q);
+    
+    // Walk recursively through the entire SDF, locate plugin tags and
+    // add robotNamespace as a child with the correct namespace
+    if (!this->robot_namespace_.empty()) 
+    {
+      // Get root element for SDF
+      TiXmlNode* model_tixml = gazebo_model_xml.FirstChild("sdf");
+      model_tixml = (!model_tixml) ? 
+          gazebo_model_xml.FirstChild("gazebo") : model_tixml;
+      if (model_tixml) 
+      {
+        walkChildAddRobotNamespace(model_tixml);
+      } 
+      else 
+      {
+        ROS_WARN("Unable to add robot namespace to xml");
+      }
+    }
   }
   else if (isURDF(model_xml))
   {
     updateURDFModelPose(gazebo_model_xml, initial_xyz, initial_q);
     updateURDFName(gazebo_model_xml, model_name);
+    
+    // Walk recursively through the entire URDF, locate plugin tags and
+    // add robotNamespace as a child with the correct namespace
+    if (!this->robot_namespace_.empty()) 
+    {
+      // Get root element for URDF
+      TiXmlNode* model_tixml = gazebo_model_xml.FirstChild("robot");
+      if (model_tixml) 
+      {
+        walkChildAddRobotNamespace(model_tixml);
+      } 
+      else 
+      {
+        ROS_WARN("Unable to add robot namespace to xml");
+      }
+    }
   }
   else
   {
@@ -1985,7 +2057,7 @@ void GazeboRosApiPlugin::walkChildAddRobotNamespace(TiXmlNode* robot_xml)
   child = robot_xml->IterateChildren(child);
   while (child != NULL)
   {
-    if (child->ValueStr().find(std::string("plugin")) == 0 && child->ValueStr().find(std::string("plugin")) != std::string::npos)
+    if (child->ValueStr().find(std::string("plugin")) == 0)
     {
       ROS_DEBUG("recursively walking gazebo extension for %s --> %d",child->ValueStr().c_str(),(int)child->ValueStr().find(std::string("plugin")));
       if (child->FirstChildElement("robotNamespace") == NULL)
@@ -2020,7 +2092,7 @@ bool GazeboRosApiPlugin::spawnAndConform(TiXmlDocument &gazebo_model_xml, std::s
   std::ostringstream stream;
   stream << gazebo_model_xml;
   std::string gazebo_model_xml_string = stream.str();
-  ROS_DEBUG("Gazebo Model XML\n\n%s\n\n ",gazebo_model_xml_string.c_str());
+  //ROS_DEBUG("Gazebo Model XML\n\n%s\n\n ",gazebo_model_xml_string.c_str());
 
   // publish to factory topic
   gazebo::msgs::Factory msg;
