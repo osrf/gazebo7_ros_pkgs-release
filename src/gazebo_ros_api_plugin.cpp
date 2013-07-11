@@ -145,6 +145,7 @@ void GazeboRosApiPlugin::Load(int argc, char** argv)
   // below needs the world to be created first
   load_gazebo_ros_api_plugin_event_ = gazebo::event::Events::ConnectWorldCreated(boost::bind(&GazeboRosApiPlugin::loadGazeboRosApiPlugin,this,_1));
 
+  plugin_loaded_ = true;
   ROS_INFO("Finished loading Gazebo ROS API Plugin.");
 }
 
@@ -1796,7 +1797,7 @@ void GazeboRosApiPlugin::publishModelStates()
   pub_model_states_.publish(model_states);
 }
 
-void GazeboRosApiPlugin::physicsReconfigureCallback(gazebo::PhysicsConfig &config, uint32_t level)
+void GazeboRosApiPlugin::physicsReconfigureCallback(gazebo_ros::PhysicsConfig &config, uint32_t level)
 {
   if (!physics_reconfigure_initialized_)
   {
@@ -1878,7 +1879,7 @@ void GazeboRosApiPlugin::physicsReconfigureThread()
   physics_reconfigure_set_client_.waitForExistence();
   physics_reconfigure_get_client_.waitForExistence();
 
-  physics_reconfigure_srv_.reset(new dynamic_reconfigure::Server<gazebo::PhysicsConfig>());
+  physics_reconfigure_srv_.reset(new dynamic_reconfigure::Server<gazebo_ros::PhysicsConfig>());
 
   physics_reconfigure_callback_ = boost::bind(&GazeboRosApiPlugin::physicsReconfigureCallback, this, _1, _2);
   physics_reconfigure_srv_->setCallback(physics_reconfigure_callback_);
@@ -2133,15 +2134,18 @@ bool GazeboRosApiPlugin::spawnAndConform(TiXmlDocument &gazebo_model_xml, std::s
       res.status_message = std::string("SpawnModel: Model pushed to spawn queue, but spawn service")
         + std::string(" timed out waiting for model to appear in simulation under the name ")
         + model_name;
-
       return true;
     }
+
     {
       //boost::recursive_mutex::scoped_lock lock(*world->GetMRMutex());
       if (world_->GetModel(model_name)) 
         break;
     }
-    ROS_DEBUG_ONCE("Waiting for spawning model (%s)",model_name.c_str());
+
+    ROS_DEBUG_STREAM_ONCE_NAMED("api_plugin","Waiting for " << timeout - ros::Time::now() 
+      << " for model " << model_name << " to spawn");
+
     usleep(2000);
   }
 
