@@ -19,8 +19,11 @@ find_package(catkin REQUIRED COMPONENTS
   rosgraph_msgs 
   trajectory_msgs 
   pcl_ros 
+  pcl_conversions
   image_transport 
   rosconsole
+  cv_bridge
+  polled_camera
 )
 
 include (FindPkgConfig)
@@ -33,7 +36,7 @@ endif()
 
 # Depend on system install of Gazebo and SDFormat
 find_package(gazebo REQUIRED)
-find_package(SDF REQUIRED)
+find_package(PCL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 
 execute_process(COMMAND
@@ -41,7 +44,6 @@ execute_process(COMMAND
   OUTPUT_VARIABLE OGRE_PLUGIN_PATH
   OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-message(STATUS OGRE_PLUGIN_PATH=${OGRE_PLUGIN_PATH})
 
 catkin_python_setup()
 
@@ -53,13 +55,11 @@ set(cxx_flags)
 foreach (item ${GAZEBO_CFLAGS})
   set(cxx_flags "${cxx_flags} ${item}")
 endforeach ()
-message(status "\n\n${cxx_flags}\n\n")
 
 set(ld_flags)
 foreach (item ${GAZEBO_LDFLAGS})
   set(ld_flags "${ld_flags} ${item}")
 endforeach ()
-message(status "\n\n${ld_flags}\n\n")
 
 
 catkin_package(
@@ -80,11 +80,13 @@ catkin_package(
   gazebo_ros_bumper 
   gazebo_ros_template 
   gazebo_ros_projector 
+  gazebo_ros_prosilica 
   gazebo_ros_force 
   gazebo_ros_joint_trajectory 
   gazebo_ros_joint_pose_trajectory
   gazebo_ros_diff_drive
   gazebo_ros_skid_steer_drive
+  gazebo_ros_video
   
   CATKIN_DEPENDS 
   message_generation 
@@ -104,13 +106,13 @@ catkin_package(
   rosgraph_msgs 
   trajectory_msgs 
   pcl_ros 
+  pcl_conversions
   image_transport 
   rosconsole
   DEPENDS 
     gazebo 
     SDF
   )
-
 
 ## Executables
 add_executable(hokuyo_node src/hokuyo_node.cpp)
@@ -206,6 +208,11 @@ set_target_properties(gazebo_ros_projector PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_ros_projector PROPERTIES COMPILE_FLAGS "${cxx_flags}")
 target_link_libraries(gazebo_ros_projector ${Boost_LIBRARIES})
 
+add_library(gazebo_ros_prosilica src/gazebo_ros_prosilica.cpp)
+set_target_properties(gazebo_ros_prosilica PROPERTIES LINK_FLAGS "${ld_flags}")
+set_target_properties(gazebo_ros_prosilica PROPERTIES COMPILE_FLAGS "${cxx_flags}")
+target_link_libraries(gazebo_ros_prosilica gazebo_ros_camera_utils ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} CameraPlugin ${catkin_LIBRARIES})
+
 add_library(gazebo_ros_force src/gazebo_ros_force.cpp)
 set_target_properties(gazebo_ros_force PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_ros_force PROPERTIES COMPILE_FLAGS "${cxx_flags}")
@@ -232,6 +239,11 @@ add_library(gazebo_ros_skid_steer_drive src/gazebo_ros_skid_steer_drive.cpp)
 set_target_properties(gazebo_ros_skid_steer_drive PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_ros_skid_steer_drive PROPERTIES COMPILE_FLAGS "${cxx_flags}")
 target_link_libraries(gazebo_ros_skid_steer_drive ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_library(gazebo_ros_video src/gazebo_ros_video.cpp)
+set_target_properties(gazebo_ros_video PROPERTIES LINK_FLAGS "${ld_flags}")
+set_target_properties(gazebo_ros_video PROPERTIES COMPILE_FLAGS "${cxx_flags}")
+target_link_libraries(gazebo_ros_video ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 ##
 ## Add your new plugin here
@@ -267,6 +279,7 @@ install(TARGETS
   gazebo_ros_joint_pose_trajectory
   gazebo_ros_diff_drive
   gazebo_ros_skid_steer_drive
+  gazebo_ros_video
   pub_joint_trajectory_test  
   gazebo_ros_gpu_laser
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
