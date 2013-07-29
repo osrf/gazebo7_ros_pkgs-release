@@ -31,8 +31,7 @@
 #include <sdf/sdf.hh>
 #include <gazebo/sensors/SensorTypes.hh>
 
-// for creating PointCloud2 from pcl point cloud
-#include <pcl/conversions.h>
+#include <pcl_conversions/pcl_conversions.h>
 
 #include <tf/tf.h>
 
@@ -61,6 +60,14 @@ GazeboRosDepthCamera::~GazeboRosDepthCamera()
 void GazeboRosDepthCamera::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
 {
   DepthCameraPlugin::Load(_parent, _sdf);
+
+  // Make sure the ROS node for Gazebo has already been initialized
+  if (!ros::isInitialized())
+  {
+    ROS_FATAL_STREAM("A ROS node for Gazebo has not been initialized, unable to load plugin. "
+      << "Load the Gazebo system plugin 'libgazebo_ros_api_plugin.so' in the gazebo_ros package)");
+    return;
+  }
 
   // copying from DepthCameraPlugin into GazeboRosCameraUtils
   this->parentSensor_ = this->parentSensor;
@@ -265,7 +272,6 @@ void GazeboRosDepthCamera::OnNewRGBPointCloud(const float *_pcd,
         }
       }
 
-      // Convert the sensor_msgs's header to a PCL header and assign to our new point cloud
       point_cloud.header = pcl_conversions::toPCL(point_cloud_msg_.header);
 
       pcl::toROSMsg(point_cloud, this->point_cloud_msg_);
@@ -425,7 +431,7 @@ bool GazeboRosDepthCamera::FillPointCloudHelper(
       point_cloud.points.push_back(point);
     }
   }
-  // Convert the sensor_msgs's header to a PCL header and assign to our new point cloud
+
   point_cloud.header = pcl_conversions::toPCL(point_cloud_msg.header);
 
   pcl::toROSMsg(point_cloud, point_cloud_msg);
