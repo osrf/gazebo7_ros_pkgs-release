@@ -1,3 +1,27 @@
+## gazebo_ros_pkgs - 2.2.1-1
+
+User `william@dosa` released the packages in the `gazebo_ros_pkgs` repository by running `/usr/local/bin/bloom-release -r hydro -t hydro gazebo_ros_pkgs` on `Fri, 02 Aug 2013 17:53:17 -0000`
+
+These packages were released:
+- `gazebo_msgs`
+- `gazebo_plugins`
+- `gazebo_ros`
+- `gazebo_ros_control`
+- `gazebo_ros_pkgs`
+
+Version of package(s) in repository `gazebo_ros_pkgs`:
+- rosdistro version: `2.2.1-0`
+- old version: `2.2.1-0`
+- new version: `2.2.1-1`
+
+Versions of tools used:
+- bloom version: `0.4.4`
+- catkin_pkg version: `0.1.19`
+- rosdep version: `0.10.19`
+- rosdistro version: `0.2.13`
+- vcstools version: `0.1.31`
+
+
 ## gazebo_ros_pkgs - 2.2.1-0
 
 User `dave@eve` released the packages in the `gazebo_ros_pkgs` repository by running `/usr/bin/bloom-release gazebo_ros_pkgs -t hydro -r hydro` on `Tue, 30 Jul 2013 01:03:52 -0000`
