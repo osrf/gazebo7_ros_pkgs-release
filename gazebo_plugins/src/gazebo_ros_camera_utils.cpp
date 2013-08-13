@@ -59,9 +59,12 @@ GazeboRosCameraUtils::GazeboRosCameraUtils()
 void GazeboRosCameraUtils::configCallback(
   gazebo_plugins::GazeboRosCameraConfig &config, uint32_t level)
 {
-  ROS_INFO("Reconfigure request for the gazebo ros camera_: %s. New rate: %.2f",
-    this->camera_name_.c_str(), config.imager_rate);
-  this->parentSensor_->SetUpdateRate(config.imager_rate);
+  if (this->initialized_)
+  {
+    ROS_INFO("Reconfigure request for the gazebo ros camera_: %s. New rate: %.2f",
+             this->camera_name_.c_str(), config.imager_rate);
+    this->parentSensor_->SetUpdateRate(config.imager_rate);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -483,7 +486,7 @@ void GazeboRosCameraUtils::PutCameraData(const unsigned char *_src)
     return;
 
   /// don't bother if there are no subscribers
-  if (this->image_pub_.getNumSubscribers() > 0)
+  if (this->image_connect_count_ > 0)
   {
     boost::mutex::scoped_lock lock(this->lock_);
 
