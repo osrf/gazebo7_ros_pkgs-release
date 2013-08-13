@@ -87,6 +87,7 @@ catkin_package(
   gazebo_ros_diff_drive
   gazebo_ros_skid_steer_drive
   gazebo_ros_video
+  gazebo_ros_planar_move
   
   CATKIN_DEPENDS 
   message_generation 
@@ -206,7 +207,7 @@ target_link_libraries(gazebo_ros_bumper ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES
 add_library(gazebo_ros_projector src/gazebo_ros_projector.cpp)
 set_target_properties(gazebo_ros_projector PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_ros_projector PROPERTIES COMPILE_FLAGS "${cxx_flags}")
-target_link_libraries(gazebo_ros_projector ${Boost_LIBRARIES})
+target_link_libraries(gazebo_ros_projector ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${Boost_LIBRARIES} ${catkin_LIBRARIES})
 
 add_library(gazebo_ros_prosilica src/gazebo_ros_prosilica.cpp)
 set_target_properties(gazebo_ros_prosilica PROPERTIES LINK_FLAGS "${ld_flags}")
@@ -243,7 +244,12 @@ target_link_libraries(gazebo_ros_skid_steer_drive ${GAZEBO_LIBRARIES} ${SDFormat
 add_library(gazebo_ros_video src/gazebo_ros_video.cpp)
 set_target_properties(gazebo_ros_video PROPERTIES LINK_FLAGS "${ld_flags}")
 set_target_properties(gazebo_ros_video PROPERTIES COMPILE_FLAGS "${cxx_flags}")
-target_link_libraries(gazebo_ros_video ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(gazebo_ros_video ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${OGRE_LIBRARIES})
+
+add_library(gazebo_ros_planar_move src/gazebo_ros_planar_move.cpp)
+set_target_properties(gazebo_ros_planar_move PROPERTIES LINK_FLAGS "${ld_flags}")
+set_target_properties(gazebo_ros_planar_move PROPERTIES COMPILE_FLAGS "${cxx_flags}")
+target_link_libraries(gazebo_ros_planar_move ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 ##
 ## Add your new plugin here
@@ -281,6 +287,7 @@ install(TARGETS
   gazebo_ros_diff_drive
   gazebo_ros_skid_steer_drive
   gazebo_ros_video
+  gazebo_ros_planar_move
   pub_joint_trajectory_test  
   gazebo_ros_gpu_laser
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
