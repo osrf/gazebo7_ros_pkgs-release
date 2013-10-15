@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.4.0 (2013-10-14)
+------------------
+
 2.3.3 (2013-10-10)
 ------------------
 * Cleaned up unnecessary debug output that was recently added
