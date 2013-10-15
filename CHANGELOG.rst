@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.4.0 (2013-10-14)
+------------------
+
 2.3.3 (2013-10-10)
 ------------------
 * Eliminated a joint_name variable and replaced it with `joint_names_[j]`.
