@@ -1,3 +1,27 @@
+## gazebo_ros_pkgs - 2.4.0-1
+
+User `hsu@lcp1` released the packages in the `gazebo_ros_pkgs` repository by running `/usr/bin/bloom-release --track hydro-current --ros-distro hydro gazebo_ros_pkgs` on `Tue, 15 Oct 2013 16:18:47 -0000`
+
+These packages were released:
+- `gazebo_msgs`
+- `gazebo_plugins`
+- `gazebo_ros`
+- `gazebo_ros_control`
+- `gazebo_ros_pkgs`
+
+Version of package(s) in repository `gazebo_ros_pkgs`:
+- rosdistro version: `2.3.3-0`
+- old version: `2.4.0-0`
+- new version: `2.4.0-1`
+
+Versions of tools used:
+- bloom version: `0.4.4`
+- catkin_pkg version: `0.1.20`
+- rosdep version: `0.10.22`
+- rosdistro version: `0.2.14`
+- vcstools version: `0.1.31`
+
+
 ## gazebo_ros_pkgs - 2.4.0-0
 
 User `hsu@lcp1` released the packages in the `gazebo_ros_pkgs` repository by running `/usr/bin/bloom-release --track groovy --ros-distro groovy gazebo_ros_pkgs` on `Tue, 15 Oct 2013 15:58:25 -0000`
