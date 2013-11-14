@@ -72,9 +72,6 @@ public:
   // Called by the world update start event
   void Update();
 
-  // Called on world reset
-  virtual void Reset();
-
   // Get the URDF XML from the parameter server
   std::string getURDF(std::string param_name) const;
 
@@ -84,6 +81,7 @@ public:
 protected:
 
   // Node Handles
+  ros::NodeHandle nh_; // no namespace
   ros::NodeHandle model_nh_; // namespaces to robot name
 
   // Pointer to the model
@@ -116,8 +114,7 @@ protected:
 
   // Timing
   ros::Duration control_period_;
-  ros::Time last_update_sim_time_ros_;
-  ros::Time last_write_sim_time_ros_;
+  ros::Time last_sim_time_ros_;
 
 };
 
