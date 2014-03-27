@@ -2,9 +2,17 @@
 Changelog for package gazebo_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.4.1 (2013-11-13)
+2.3.5 (2014-03-26)
 ------------------
-* rerelease because sdformat became libsdformat, but we also based change on 2.3.4 in hydro-devel.
+* gazebo_ros: [less-than-minor] fix newlines
+* gazebo_ros: remove assignment to self
+  If this is needed for any twisted reason, it should be made clear
+  anyway. Assuming this line is harmless and removing it because it
+  generates cppcheck warnings.
+* Contributors: Paul Mathieu
+
+2.3.4 (2013-11-13)
+------------------
 * remove debug statement
 * fix sdf spawn with initial pose
 * fix sdf spawn with initial pose
@@ -23,9 +31,6 @@ Changelog for package gazebo_ros
   When using the -wait option the script fails because is missing the time import
 * Use pre-increment for iterators
 * Fix iterator erase() problems
-
-2.4.0 (2013-10-14)
-------------------
 
 2.3.3 (2013-10-10)
 ------------------
