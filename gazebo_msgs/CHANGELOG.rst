@@ -2,11 +2,10 @@
 Changelog for package gazebo_msgs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.4.1 (2013-11-13)
+2.3.5 (2014-03-26)
 ------------------
-* rerelease because sdformat became libsdformat, but we also based change on 2.3.4 in hydro-devel.
 
-2.4.0 (2013-10-14)
+2.3.4 (2013-11-13)
 ------------------
 
 2.3.3 (2013-10-10)
