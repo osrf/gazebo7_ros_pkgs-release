@@ -2,9 +2,24 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.4.1 (2013-11-13)
+2.3.5 (2014-03-26)
 ------------------
-* rerelease because sdformat became libsdformat, but we also based change on 2.3.4 in hydro-devel.
+* Removed some debugging code.
+* joint->SetAngle() and joint->SetVelocity() are now used to control
+  position-controlled joints and velocity-controlled joints that do not
+  have PID gain values stored on the Parameter Server.
+* Position-controlled and velocity-controlled joints now use PID controllers
+  instead of calling SetAngle() or SetVelocity(). readSim() now longer calls
+  angles::shortest_angular_distance() when a joint is prismatic.
+  PLUGINLIB_EXPORT_CLASS is now used to register the plugin.
+* gazebo_ros_control now depends on control_toolbox.
+* Added support for the position hardware interface. Completed support for the
+  velocity hardware interface.
+* Removed the "support more hardware interfaces" line.
+* Contributors: Jim Rothrock
+
+2.3.4 (2013-11-13)
+------------------
 * Merge pull request `#144 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/144>`_ from meyerj/fix-125
   Fixed `#125 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/125>`_: ``gazebo_ros_control``: controlPeriod greater than the simulation period causes unexpected results
 * Merge pull request `#134 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/134>`_ from meyerj/gazebo-ros-control-use-model-nh
@@ -15,9 +30,6 @@ Changelog for package gazebo_ros_control
 * ``gazebo_ros_control``: use the model NodeHandle to get the ``robot_description`` parameter
 * Add missing ``run_depend`` to urdf in ``gazebo_ros_control``
 * Remove dependency to meta-package ``ros_controllers``
-
-2.4.0 (2013-10-14)
-------------------
 
 2.3.3 (2013-10-10)
 ------------------
