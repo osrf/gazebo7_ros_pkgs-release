@@ -2,6 +2,12 @@
 Changelog for package gazebo_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.4.3 (2014-05-12)
+------------------
+* added osx support for gazebo start scripts
+* Remove gazebo_ros dependency on gazebo_plugins
+* Contributors: Markus Achtelik, Steven Peters
+
 2.4.2 (2014-03-27)
 ------------------
 * merging from hydro-devel

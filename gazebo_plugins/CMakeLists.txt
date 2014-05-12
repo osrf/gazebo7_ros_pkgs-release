@@ -18,7 +18,6 @@ find_package(catkin REQUIRED COMPONENTS
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
-  pcl_ros 
   pcl_conversions
   image_transport 
   rosconsole
@@ -112,7 +111,6 @@ catkin_package(
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
-  pcl_ros 
   pcl_conversions
   image_transport 
   rosconsole
@@ -120,6 +118,7 @@ catkin_package(
     gazebo 
     SDF
   )
+add_dependencies(${PROJECT_NAME}_gencfg ${catkin_EXPORTED_TARGETS})
 
 ## Executables
 add_executable(hokuyo_node src/hokuyo_node.cpp)
