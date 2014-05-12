@@ -1,3 +1,27 @@
+## gazebo_ros_pkgs (indigo) - 2.4.3-0
+
+The packages in the `gazebo_ros_pkgs` repository were released into the `indigo` distro by running `/usr/bin/bloom-release --ros-distro indigo --track indigo gazebo_ros_pkgs` on `Mon, 12 May 2014 17:54:29 -0000`
+
+These packages were released:
+- `gazebo_msgs`
+- `gazebo_plugins`
+- `gazebo_ros`
+- `gazebo_ros_control`
+- `gazebo_ros_pkgs`
+
+Version of package(s) in repository `gazebo_ros_pkgs`:
+- rosdistro version: `null`
+- old version: `None-1`
+- new version: `2.4.3-0`
+
+Versions of tools used:
+- bloom version: `0.5.7`
+- catkin_pkg version: `0.2.2`
+- rosdep version: `0.10.27`
+- rosdistro version: `0.3.5`
+- vcstools version: `0.1.33`
+
+
 ## gazebo_ros_pkgs (hydro) - 2.4.2-0
 
 User `hsu@lcp1` released the packages in the `gazebo_ros_pkgs` repository into the `hydro` distro by running `/usr/bin/bloom-release --track hydro-current --ros-distro hydro gazebo_ros_pkgs` on `Thu, 27 Mar 2014 23:32:05 -0000`
