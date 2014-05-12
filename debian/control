@@ -1,0 +1,12 @@
+Source: ros-indigo-gazebo-ros-pkgs
+Section: misc
+Priority: extra
+Maintainer: John Hsu <hsu@osrfoundation.org>
+Build-Depends: debhelper (>= 7.0.50~), ros-indigo-catkin
+Homepage: http://gazebosim.org/wiki/Tutorials#ROS_Integration
+Standards-Version: 3.9.2
+
+Package: ros-indigo-gazebo-ros-pkgs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-gazebo-msgs, ros-indigo-gazebo-plugins, ros-indigo-gazebo-ros
+Description: Interface for using ROS with the Gazebo simulator.
