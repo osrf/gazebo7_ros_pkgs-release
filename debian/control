@@ -1,0 +1,12 @@
+Source: ros-indigo-gazebo-ros-control
+Section: misc
+Priority: extra
+Maintainer: Jonathan Bohren <jbo@jhu.edu>
+Build-Depends: debhelper (>= 7.0.50~), ros-indigo-catkin, ros-indigo-control-toolbox, ros-indigo-controller-manager, ros-indigo-joint-limits-interface, ros-indigo-pluginlib, ros-indigo-roscpp, ros-indigo-transmission-interface, ros-indigo-urdf
+Homepage: http://ros.org/wiki/gazebo_ros_control
+Standards-Version: 3.9.2
+
+Package: ros-indigo-gazebo-ros-control
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ros-indigo-control-toolbox, ros-indigo-controller-manager, ros-indigo-gazebo-ros, ros-indigo-pluginlib, ros-indigo-roscpp, ros-indigo-transmission-interface, ros-indigo-urdf
+Description: gazebo_ros_control
