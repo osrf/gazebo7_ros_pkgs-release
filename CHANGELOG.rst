@@ -2,18 +2,16 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.4.2 (2014-03-27)
+2.3.6 (2014-08-18)
 ------------------
-* merging from hydro-devel
-* bump patch version for indigo-devel to 2.4.1
-* merging from indigo-devel after 2.3.4 release
-* Merge branch 'hydro-devel' of github.com:ros-simulation/gazebo_ros_pkgs into indigo-devel
-* "2.4.0"
-* catkin_generate_changelog
-* Contributors: John Hsu
-
-2.4.1 (2013-11-13)
-------------------
+* Update default_robot_hw_sim.cpp
+* Update for hydro + gazebo 1.9
+* Fix to work with gazebo3
+* Fix build with gazebo4 and indigo
+* Revert 4776545, as it belongs in indigo-devel.
+* Fix repo names in package.xml's
+* gazebo_ros_control: default_robot_hw_sim: Suppressing pid error message, depends on `ros-controls/control_toolbox#21 <https://github.com/ros-controls/control_toolbox/issues/21>`_
+* Contributors: Adolfo Rodriguez Tsouroukdissian, Dave Coleman, Jon Binney, Jonathan Bohren, Nate Koenig, John Hsu
 
 2.3.5 (2014-03-26)
 ------------------
@@ -33,7 +31,6 @@ Changelog for package gazebo_ros_control
 
 2.3.4 (2013-11-13)
 ------------------
-* rerelease because sdformat became libsdformat, but we also based change on 2.3.4 in hydro-devel.
 * Merge pull request `#144 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/144>`_ from meyerj/fix-125
   Fixed `#125 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/125>`_: ``gazebo_ros_control``: controlPeriod greater than the simulation period causes unexpected results
 * Merge pull request `#134 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/134>`_ from meyerj/gazebo-ros-control-use-model-nh
@@ -44,9 +41,6 @@ Changelog for package gazebo_ros_control
 * ``gazebo_ros_control``: use the model NodeHandle to get the ``robot_description`` parameter
 * Add missing ``run_depend`` to urdf in ``gazebo_ros_control``
 * Remove dependency to meta-package ``ros_controllers``
-
-2.4.0 (2013-10-14)
-------------------
 
 2.3.3 (2013-10-10)
 ------------------
