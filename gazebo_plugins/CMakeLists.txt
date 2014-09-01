@@ -19,12 +19,12 @@ find_package(catkin REQUIRED COMPONENTS
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
-  pcl_conversions
   image_transport 
   rosconsole
   cv_bridge
   polled_camera
   diagnostic_updater
+  camera_info_manager
 )
 
 include (FindPkgConfig)
@@ -38,7 +38,6 @@ endif()
 
 # Depend on system install of Gazebo and SDFormat
 find_package(gazebo REQUIRED)
-find_package(PCL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 
 execute_process(COMMAND
@@ -84,6 +83,7 @@ catkin_package(
   gazebo_ros_p3d 
   gazebo_ros_imu 
   gazebo_ros_f3d 
+  gazebo_ros_ft_sensor
   gazebo_ros_bumper 
   gazebo_ros_template 
   gazebo_ros_projector 
@@ -116,9 +116,9 @@ catkin_package(
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
-  pcl_conversions
   image_transport 
   rosconsole
+  camera_info_manager
   DEPENDS 
     gazebo 
     SDF
@@ -240,6 +240,9 @@ set_target_properties(gazebo_ros_hand_of_god PROPERTIES LINK_FLAGS "${ld_flags}"
 set_target_properties(gazebo_ros_hand_of_god PROPERTIES COMPILE_FLAGS "${cxx_flags}")
 target_link_libraries(gazebo_ros_hand_of_god ${GAZEBO_LIBRARIES} ${SDFormat_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
+add_library(gazebo_ros_ft_sensor src/gazebo_ros_ft_sensor.cpp)
+target_link_libraries(gazebo_ros_ft_sensor ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
 ##
 ## Add your new plugin here
 ##
@@ -265,6 +268,7 @@ install(TARGETS
   gazebo_ros_p3d
   gazebo_ros_imu
   gazebo_ros_f3d
+  gazebo_ros_ft_sensor
   gazebo_ros_bumper
   gazebo_ros_hand_of_god
   gazebo_ros_template
