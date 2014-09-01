@@ -32,6 +32,8 @@
 #include <ros/callback_queue.h>
 #include <ros/advertise_options.h>
 
+#include <pcl/point_types.h>
+
 // ros messages stuff
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/Image.h>
@@ -121,7 +123,7 @@ namespace gazebo
     private: ros::Publisher point_cloud_pub_;
     private: ros::Publisher depth_image_pub_;
 
-    /// \brief PointCloud2 point cloud message
+    /// \brief PCL point cloud message
     private: sensor_msgs::PointCloud2 point_cloud_msg_;
     private: sensor_msgs::Image depth_image_msg_;
 

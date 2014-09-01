@@ -128,30 +128,18 @@ public:
         continue;
       }
 
-      std::vector<std::string> joint_interfaces = transmissions[j].joints_[0].hardware_interfaces_;
-      if (joint_interfaces.empty() &&
-          !(transmissions[j].actuators_.empty()) &&
-          !(transmissions[j].actuators_[0].hardware_interfaces_.empty()))
+      // Check that this transmission has one actuator
+      if(transmissions[j].actuators_.size() == 0)
       {
-        // TODO: Deprecate HW interface specification in actuators in ROS J
-        joint_interfaces = transmissions[j].actuators_[0].hardware_interfaces_;
-        ROS_WARN_STREAM_NAMED("default_robot_hw_sim", "The <hardware_interface> element of tranmission " <<
-          transmissions[j].name_ << " should be nested inside the <joint> element, not <actuator>. " <<
-          "The transmission will be properly loaded, but please update " <<
-          "your robot model to remain compatible with future versions of the plugin.");
-      }
-      if (joint_interfaces.empty())
-      {
-        ROS_WARN_STREAM_NAMED("default_robot_hw_sim", "Joint " << transmissions[j].joints_[0].name_ <<
-          " of transmission " << transmissions[j].name_ << " does not specify any hardware interface. " <<
-          "Not adding it to the robot hardware simulation.");
+        ROS_WARN_STREAM_NAMED("default_robot_hw_sim","Transmission " << transmissions[j].name_
+          << " has no associated actuators.");
         continue;
       }
-      else if (joint_interfaces.size() > 1)
+      else if(transmissions[j].actuators_.size() > 1)
       {
-        ROS_WARN_STREAM_NAMED("default_robot_hw_sim", "Joint " << transmissions[j].joints_[0].name_ <<
-          " of transmission " << transmissions[j].name_ << " specifies multiple hardware interfaces. " <<
-          "Currently the default robot hardware simulation interface only supports one.");
+        ROS_WARN_STREAM_NAMED("default_robot_hw_sim","Transmission " << transmissions[j].name_
+          << " has more than one actuator. Currently the default robot hardware simulation "
+          << " interface only supports one.");
         continue;
       }
 
@@ -164,7 +152,13 @@ public:
       joint_position_command_[j] = 0.0;
       joint_velocity_command_[j] = 0.0;
 
-      const std::string& hardware_interface = joint_interfaces.front();
+#if ROS_VERSION_MINOR > 10 || ROS_VERSION_MAJOR > 1
+      const std::string &hardware_interface =
+        transmissions[j].actuators_[0].hardware_interfaces_[0];
+#else
+      const std::string &hardware_interface =
+        transmissions[j].actuators_[0].hardware_interface_;
+#endif
 
       // Debug
       ROS_DEBUG_STREAM_NAMED("default_robot_hw_sim","Loading joint '" << joint_names_[j]
@@ -229,7 +223,7 @@ public:
         // joint->SetVelocity() to control the joint.
         const ros::NodeHandle nh(model_nh, robot_namespace + "/gazebo_ros_control/pid_gains/" +
                                  joint_names_[j]);
-        if (pid_controllers_[j].init(nh, true))
+        if (pid_controllers_[j].init(nh))
         {
           switch (joint_control_methods_[j])
           {

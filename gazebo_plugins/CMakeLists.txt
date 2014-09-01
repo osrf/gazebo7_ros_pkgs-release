@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
+  pcl_conversions
   image_transport 
   rosconsole
   cv_bridge
@@ -38,6 +39,7 @@ endif()
 
 # Depend on system install of Gazebo and SDFormat
 find_package(gazebo REQUIRED)
+find_package(PCL REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
 
 execute_process(COMMAND
@@ -116,6 +118,7 @@ catkin_package(
   driver_base 
   rosgraph_msgs 
   trajectory_msgs 
+  pcl_conversions
   image_transport 
   rosconsole
   camera_info_manager
@@ -123,7 +126,6 @@ catkin_package(
     gazebo 
     SDF
   )
-add_dependencies(${PROJECT_NAME}_gencfg ${catkin_EXPORTED_TARGETS})
 
 ## Executables
 add_executable(hokuyo_node src/hokuyo_node.cpp)
