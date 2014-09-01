@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.3.7 (2014-09-01)
+------------------
+
 2.3.6 (2014-08-18)
 ------------------
 * Update default_robot_hw_sim.cpp
