@@ -3,11 +3,9 @@
   <!-- these are the arguments you can pass this launch file, for example paused:=true -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
-  <arg name="extra_gazebo_args" default=""/>
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
-  <arg name="physics" default="ode"/>
   <arg name="verbose" default="false"/>
   <arg name="world_name" default="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
 
@@ -28,11 +26,16 @@
 
   <!-- start gazebo server-->
   <node name="gazebo" pkg="gazebo_ros" type="$(arg script_type)" respawn="false" output="screen"
-	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) -e $(arg physics) $(arg extra_gazebo_args) $(arg world_name)" />
+	args="$(arg command_arg1) $(arg command_arg2) $(arg command_arg3) $(arg world_name)" />
 	
   <!-- start gazebo client -->
   <group if="$(arg gui)">
     <node name="gazebo_gui" pkg="gazebo_ros" type="gzclient" respawn="false" output="screen"/>
   </group>
 
+  <!-- load arm urdf in ros param -->
+  <param name="/robot_description" textfile="$(find gazebo_ros)/test/spawn_joint_initial_position/simple_arm.urdf" />
+
+  <node name="spawn_arm" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+   args="-urdf -param robot_description -model simple_arm -J arm_shoulder_pan_joint 1.57 -J arm_elbow_pan_joint -1.57"/>
 </launch>
