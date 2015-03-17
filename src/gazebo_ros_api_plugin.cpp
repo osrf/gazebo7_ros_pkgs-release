@@ -1282,8 +1282,13 @@ bool GazeboRosApiPlugin::setModelState(gazebo_msgs::SetModelState::Request &req,
 
       //std::cout << " debug : " << relative_entity->GetName() << " : " << frame_pose << " : " << target_pose << std::endl;
       //target_pose = frame_pose + target_pose; // seems buggy, use my own
-      target_pose.pos = frame_pos + frame_rot.RotateVector(target_pos);
+      target_pose.pos = model->GetWorldPose().pos + frame_rot.RotateVector(target_pos);
       target_pose.rot = frame_rot * target_pose.rot;
+     
+      // Velocities should be commanded in the requested reference
+      // frame, so we need to translate them to the world frame
+      target_pos_dot = frame_rot.RotateVector(target_pos_dot);
+      target_rot_dot = frame_rot.RotateVector(target_rot_dot);
     }
     /// @todo: FIXME map is really wrong, need to use tf here somehow
     else if (req.model_state.reference_frame == "" || req.model_state.reference_frame == "world" || req.model_state.reference_frame == "map" || req.model_state.reference_frame == "/map" )
@@ -2078,7 +2083,7 @@ gazebo::math::Pose GazeboRosApiPlugin::parsePose(const std::string &str)
       }
       catch(boost::bad_lexical_cast &e)
       {
-        sdferr << "xml key [" << str
+        gzerr << "xml key [" << str
           << "][" << i << "] value [" << pieces[i]
           << "] is not a valid double from a 3-tuple\n";
         return gazebo::math::Pose();
@@ -2111,7 +2116,7 @@ gazebo::math::Vector3 GazeboRosApiPlugin::parseVector3(const std::string &str)
       }
       catch(boost::bad_lexical_cast &e)
       {
-        sdferr << "xml key [" << str
+        gzerr << "xml key [" << str
           << "][" << i << "] value [" << pieces[i]
           << "] is not a valid double from a 3-tuple\n";
         return gazebo::math::Vector3();
