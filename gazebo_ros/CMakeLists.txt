@@ -49,6 +49,7 @@ catkin_package(
   message_generation
   std_msgs
   gazebo_msgs
+  gazebo_plugins
 
   DEPENDS
     TinyXML
@@ -92,5 +93,9 @@ install(PROGRAMS scripts/gazebo scripts/debug scripts/gzclient scripts/gzserver 
 # Install Gazebo launch files
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+  )
+
+install(DIRECTORY test/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/test
   )
 
