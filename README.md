@@ -1,3 +1,31 @@
+## gazebo_ros_pkgs (jade) - 2.5.0-0
+
+The packages in the `gazebo_ros_pkgs` repository were released into the `jade` distro by running `/usr/bin/bloom-release -r jade -t jade gazebo_ros_pkgs` on `Thu, 30 Apr 2015 19:09:38 -0000`
+
+These packages were released:
+- `gazebo_msgs`
+- `gazebo_plugins`
+- `gazebo_ros`
+- `gazebo_ros_pkgs`
+
+These packages were explicitly ignored:
+- `gazebo_ros_control`
+
+Version of package(s) in repository `gazebo_ros_pkgs`:
+- upstream repository: https://github.com/ros-simulation/gazebo_ros_pkgs.git
+- release repository: unknown
+- rosdistro version: `null`
+- old version: `null`
+- new version: `2.5.0-0`
+
+Versions of tools used:
+- bloom version: `0.5.20`
+- catkin_pkg version: `0.2.8`
+- rosdep version: `0.11.2`
+- rosdistro version: `0.4.2`
+- vcstools version: `0.1.36`
+
+
 ## gazebo_ros_pkgs (hydro) - 2.3.8-0
 
 The packages in the `gazebo_ros_pkgs` repository were released into the `hydro` distro by running `/usr/bin/bloom-release gazebo_ros_pkgs --track hydro --rosdistro hydro` on `Tue, 17 Mar 2015 18:12:44 -0000`
