@@ -2,11 +2,15 @@
 Changelog for package gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.5.0 (2015-04-30)
+2.4.9 (2015-08-16)
 ------------------
-* run_depend on libgazebo5-dev instead of gazebo5
-* Changed the rosdep key for gazebo to gazebo5, for Jade Gazebo5 will be used.
-* Contributors: Steven Peters, William Woodall
+* Adds range plugin for infrared and ultrasound sensors from PAL Robotics
+* Import changes from jade-branch
+* Add range world and launch file
+* Add ifdefs to fix build with gazebo2
+* Use Joint::SetParam for joint velocity motors
+* Set GAZEBO_CXX_FLAGS to fix c++11 compilation errors
+* Contributors: Bence Magyar, Jose Luis Rivero, Steven Peters
 
 2.4.8 (2015-03-17)
 ------------------
