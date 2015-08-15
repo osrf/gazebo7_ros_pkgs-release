@@ -24,7 +24,6 @@ endif()
 
 # Depend on system install of Gazebo
 find_package(gazebo REQUIRED)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 find_package(Boost REQUIRED COMPONENTS thread)
 
@@ -66,8 +65,6 @@ set(ld_flags)
 foreach (item ${GAZEBO_LDFLAGS})
   set(ld_flags "${ld_flags} ${item}")
 endforeach ()
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 ## Plugins
 add_library(gazebo_ros_api_plugin src/gazebo_ros_api_plugin.cpp)
