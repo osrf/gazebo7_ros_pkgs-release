@@ -1,6 +1,6 @@
 <package>
   <name>gazebo_plugins</name>
-  <version>2.5.0</version>
+  <version>2.5.1</version>
   <description>
     Robot-independent Gazebo plugins for sensors, motors and dynamic reconfigurable components.
   </description>
@@ -41,11 +41,16 @@
   <build_depend>polled_camera</build_depend>
   <build_depend>diagnostic_updater</build_depend>
   <build_depend>camera_info_manager</build_depend>
+  <build_depend>std_msgs</build_depend>
 
-  <run_depend>gazebo5</run_depend>
   <run_depend>gazebo_msgs</run_depend>
   <run_depend>gazebo_ros</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <!--
+    Need to use libgazebo5-dev since run script needs pkg-config
+    See: https://github.com/ros-simulation/gazebo_ros_pkgs/issues/323 for more info
+  -->
+  <run_depend>libgazebo5-dev</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>trajectory_msgs</run_depend>
   <run_depend>std_srvs</run_depend>
@@ -66,5 +71,6 @@
   <run_depend>cv_bridge</run_depend>
   <run_depend>polled_camera</run_depend>
   <run_depend>camera_info_manager</run_depend>
+  <run_depend>std_msgs</run_depend>
 
 </package>
