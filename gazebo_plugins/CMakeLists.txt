@@ -25,6 +25,7 @@ find_package(catkin REQUIRED COMPONENTS
   polled_camera
   diagnostic_updater
   camera_info_manager
+  std_msgs
 )
 
 include (FindPkgConfig)
@@ -40,6 +41,7 @@ endif()
 # Depend on system install of Gazebo and SDFormat
 find_package(gazebo REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 execute_process(COMMAND
   pkg-config --variable=plugindir OGRE
@@ -71,6 +73,10 @@ link_directories(
   ${OGRE-Terrain_LIBRARY_DIRS}
   ${OGRE-Paging_LIBRARY_DIRS}
 )
+
+if (GAZEBO_VERSION VERSION_GREATER 6.0 OR GAZEBO_VERSION VERSION_EQUAL 6.0)
+  catkin_package(  INCLUDE_DIRS include LIBRARIES gazebo_ros_elevator)
+endif()
 
 catkin_package(
   INCLUDE_DIRS include
@@ -124,6 +130,7 @@ catkin_package(
   image_transport 
   rosconsole
   camera_info_manager
+  std_msgs
   DEPENDS 
     gazebo 
     SDF
@@ -165,6 +172,12 @@ target_link_libraries(MultiCameraPlugin ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} 
 add_library(gazebo_ros_camera src/gazebo_ros_camera.cpp)
 add_dependencies(gazebo_ros_camera ${PROJECT_NAME}_gencfg)
 target_link_libraries(gazebo_ros_camera gazebo_ros_camera_utils ${GAZEBO_LIBRARIES} CameraPlugin ${catkin_LIBRARIES})
+
+if (GAZEBO_VERSION VERSION_GREATER 6.0 OR GAZEBO_VERSION VERSION_EQUAL 6.0)
+  add_library(gazebo_ros_elevator src/gazebo_ros_elevator.cpp)
+  add_dependencies(gazebo_ros_elevator ${PROJECT_NAME}_gencfg)
+  target_link_libraries(gazebo_ros_elevator ${GAZEBO_LIBRARIES} ElevatorPlugin ${catkin_LIBRARIES})
+endif()
 
 add_library(gazebo_ros_multicamera src/gazebo_ros_multicamera.cpp)
 add_dependencies(gazebo_ros_multicamera ${PROJECT_NAME}_gencfg)
@@ -248,6 +261,9 @@ target_link_libraries(gazebo_ros_hand_of_god ${GAZEBO_LIBRARIES} ${SDFormat_LIBR
 add_library(gazebo_ros_ft_sensor src/gazebo_ros_ft_sensor.cpp)
 target_link_libraries(gazebo_ros_ft_sensor ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
+add_library(gazebo_ros_range src/gazebo_ros_range.cpp)
+target_link_libraries(gazebo_ros_range ${catkin_LIBRARIES} ${GAZEBO_LIBRARIES} ${Boost_LIBRARIES} RayPlugin)
+
 ##
 ## Add your new plugin here
 ##
@@ -290,9 +306,17 @@ install(TARGETS
   gazebo_ros_planar_move
   pub_joint_trajectory_test  
   gazebo_ros_gpu_laser
+  gazebo_ros_range
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   )
+
+if (GAZEBO_VERSION VERSION_GREATER 6.0 OR GAZEBO_VERSION VERSION_EQUAL 6.0)
+  install(TARGETS gazebo_ros_elevator
+    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+    )
+endif()
 
 install(DIRECTORY include/
    DESTINATION ${CATKIN_GLOBAL_INCLUDE_DESTINATION}
