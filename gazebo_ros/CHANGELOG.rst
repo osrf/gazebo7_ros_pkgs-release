@@ -2,31 +2,20 @@
 Changelog for package gazebo_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-2.5.1 (2015-08-16)
-------------------
-* Port of Pal Robotics range sensor plugin to Jade
-* Added a comment about the need of libgazebo5-dev in runtime
-* Added missing files
-* Added elevator plugin
-* Use c++11
-* run_depend on libgazebo5-dev (`#323 <https://github.com/ros-simulation/gazebo_ros_pkgs/issues/323>`_)
-  Declare the dependency.
-  It can be fixed later if we don't want it.
-* Contributors: Jose Luis Rivero, Nate Koenig, Steven Peters
+2.4.10 (2016-02-25)
+-------------------
+* Fix invalid signal name on OS X
+  scripts/gazebo: line 30: kill: SIGINT: invalid signal specification
+* Restart package resolving from last position, do not start all over.
+* Contributors: Boris Gromov, Guillaume Walck
 
-* Port of Pal Robotics range sensor plugin to Jade
-* Added a comment about the need of libgazebo5-dev in runtime
-* Added missing files
-* Added elevator plugin
-* Use c++11
-* run_depend on libgazebo5-dev
-* Contributors: Jose Luis Rivero, Nate Koenig, Steven Peters
-
-2.5.0 (2015-04-30)
+2.4.9 (2015-08-16)
 ------------------
-* run_depend on libgazebo5-dev instead of gazebo5
-* Changed the rosdep key for gazebo to gazebo5, for Jade Gazebo5 will be used.
-* Contributors: Steven Peters, William Woodall
+* Import changes from jade-branch
+* Add range world and launch file
+* fix crash
+* Set GAZEBO_CXX_FLAGS to fix c++11 compilation errors
+* Contributors: Bence Magyar, Ian Chen, Jose Luis Rivero, Steven Peters
 
 2.4.8 (2015-03-17)
 ------------------
