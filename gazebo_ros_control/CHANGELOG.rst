@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.4.10 (2016-02-25)
+-------------------
+
 2.4.9 (2015-08-16)
 ------------------
 * Import changes from jade-branch
