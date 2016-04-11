@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros_control
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.5.3 (2016-04-11)
+------------------
+
 2.5.2 (2016-02-25)
 ------------------
 * clean up merge from indigo-devel
