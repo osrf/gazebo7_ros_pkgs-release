@@ -2,6 +2,9 @@
 Changelog for package gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.5.3 (2016-04-11)
+------------------
+
 2.5.2 (2016-02-25)
 ------------------
 * Fix row_step of openni_kinect plugin
