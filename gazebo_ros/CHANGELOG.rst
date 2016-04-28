@@ -4,15 +4,12 @@ Changelog for package gazebo_ros
 
 2.5.4 (2016-04-27)
 ------------------
-* merge indigo, jade to kinetic-devel
-* Upgrade to gazebo 7 and remove deprecated driver_base dependency
-  * Upgrade to gazebo 7 and remove deprecated driver_base dependency
-  * disable gazebo_ros_control until dependencies are met
-  * Remove stray backslash
-* spawn_model: adding -b option to bond to the model and delete it on sigint
 * Update maintainer for Kinetic release
+* support to change clock frequncy from ros param
 * Allow respawning gazebo node.
-* Contributors: Hugo Boyer, Isaac IY Saito, Jackie Kay, Jonathan Bohren, Jose Luis Rivero, Steven Peters
+* Add option to change package:// to model:// when loading urdf file 
+* Fix string replacement to look for mesh filename surrounded by single or double quotes.
+* Contributors: Isaac IY Saito, John Hsu, Jose Luis Rivero, Kei Okada, Steven Peters, Yuki Furuta
 
 2.5.3 (2016-04-11)
 ------------------
