@@ -2,6 +2,9 @@
 Changelog for package gazebo_ros
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.5.7 (2016-06-10)
+------------------
+
 2.5.6 (2016-04-28)
 ------------------
 * Remove deprecated spawn_gazebo_model service
