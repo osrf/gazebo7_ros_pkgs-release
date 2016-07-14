@@ -33,8 +33,7 @@ GazeboRosApiPlugin::GazeboRosApiPlugin() :
   stop_(false),
   plugin_loaded_(false),
   pub_link_states_connection_count_(0),
-  pub_model_states_connection_count_(0),
-  pub_clock_frequency_(0)
+  pub_model_states_connection_count_(0)
 {
   robot_namespace_.clear();
 }
@@ -217,6 +216,15 @@ void GazeboRosApiPlugin::advertiseServices()
 {
   // publish clock for simulated ros time
   pub_clock_ = nh_->advertise<rosgraph_msgs::Clock>("/clock",10);
+
+  // Advertise spawn services on the custom queue - DEPRECATED IN HYDRO
+  std::string spawn_gazebo_model_service_name("spawn_gazebo_model");
+  ros::AdvertiseServiceOptions spawn_gazebo_model_aso =
+    ros::AdvertiseServiceOptions::create<gazebo_msgs::SpawnModel>(
+                                                                  spawn_gazebo_model_service_name,
+                                                                  boost::bind(&GazeboRosApiPlugin::spawnGazeboModel,this,_1,_2),
+                                                                  ros::VoidPtr(), &gazebo_queue_);
+  spawn_gazebo_model_service_ = nh_->advertiseService(spawn_gazebo_model_aso);
 
   // Advertise spawn services on the custom queue
   std::string spawn_sdf_model_service_name("spawn_sdf_model");
@@ -474,8 +482,7 @@ void GazeboRosApiPlugin::advertiseServices()
   nh_->setParam("/use_sim_time", true);
 
   // todo: contemplate setting environment variable ROBOT=sim here???
-  nh_->getParam("pub_clock_frequency", pub_clock_frequency_);
-  last_pub_clock_time_ = world_->GetSimTime();
+
 }
 
 void GazeboRosApiPlugin::onLinkStatesConnect()
@@ -579,6 +586,14 @@ bool GazeboRosApiPlugin::spawnURDFModel(gazebo_msgs::SpawnModel::Request &req,
 
   // Model is now considered convert to SDF
   return spawnSDFModel(req,res);
+}
+
+// DEPRECATED IN HYDRO
+bool GazeboRosApiPlugin::spawnGazeboModel(gazebo_msgs::SpawnModel::Request &req,
+                                          gazebo_msgs::SpawnModel::Response &res)
+{
+  ROS_WARN_STREAM_NAMED("api_plugin","/gazebo/spawn_gazebo_model is deprecated, use /gazebo/spawn_sdf_model instead");
+  spawnSDFModel(req, res);
 }
 
 bool GazeboRosApiPlugin::spawnSDFModel(gazebo_msgs::SpawnModel::Request &req,
@@ -761,26 +776,6 @@ bool GazeboRosApiPlugin::getModelState(gazebo_msgs::GetModelState::Request &req,
   }
   else
   {
-     /**
-     * @brief creates a header for the result
-     * @author Markus Bader markus.bader@tuwien.ac.at
-     * @date 21th Nov 2014
-     **/
-    {
-      std::map<std::string, unsigned int>::iterator it = access_count_get_model_state_.find(req.model_name);
-      if(it == access_count_get_model_state_.end()) 
-      {
-        access_count_get_model_state_.insert( std::pair<std::string, unsigned int>(req.model_name, 1) );
-        res.header.seq = 1;
-      } 
-      else 
-      {
-        it->second++;
-        res.header.seq = it->second;
-      }
-      res.header.stamp = ros::Time::now();
-      res.header.frame_id = req.relative_entity_name; /// @brief this is a redundant information
-    }
     // get model pose
     gazebo::math::Pose       model_pose = model->GetWorldPose();
     gazebo::math::Vector3    model_pos = model_pose.pos;
@@ -1785,28 +1780,18 @@ void GazeboRosApiPlugin::forceJointSchedulerSlot()
 void GazeboRosApiPlugin::publishSimTime(const boost::shared_ptr<gazebo::msgs::WorldStatistics const> &msg)
 {
   ROS_ERROR("CLOCK2");
-  gazebo::common::Time sim_time = world_->GetSimTime();
-  if (pub_clock_frequency_ > 0 && (sim_time - last_pub_clock_time_).Double() < 1.0/pub_clock_frequency_)
-    return;
-
   gazebo::common::Time currentTime = gazebo::msgs::Convert( msg->sim_time() );
   rosgraph_msgs::Clock ros_time_;
   ros_time_.clock.fromSec(currentTime.Double());
   //  publish time to ros
-  last_pub_clock_time_ = sim_time;
   pub_clock_.publish(ros_time_);
 }
 void GazeboRosApiPlugin::publishSimTime()
 {
-  gazebo::common::Time sim_time = world_->GetSimTime();
-  if (pub_clock_frequency_ > 0 && (sim_time - last_pub_clock_time_).Double() < 1.0/pub_clock_frequency_)
-    return;
-
   gazebo::common::Time currentTime = world_->GetSimTime();
   rosgraph_msgs::Clock ros_time_;
   ros_time_.clock.fromSec(currentTime.Double());
   //  publish time to ros
-  last_pub_clock_time_ = sim_time;
   pub_clock_.publish(ros_time_);
 }
 
