@@ -2,6 +2,15 @@
 Changelog for package gazebo_plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.6.0 (2016-08-04)
+------------------
+* Use NOT VERSION_LESS to simplify cmake logic
+* Added an interface to gazebo's harness plugin
+* removed extra includes
+* Fix gazebo7 deprecation warnings
+* bugfix: duplicated tf prefix resolution
+* Contributors: Steven Peters, Yuki Furuta, nate koenig
+
 2.5.4 (2016-04-27)
 ------------------
 
